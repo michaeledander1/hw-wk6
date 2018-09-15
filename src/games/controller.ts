@@ -35,9 +35,14 @@ export default class GameController {
         return Game.merge(game, update).save()
       }
       if (update.board) {
-        const totalMoves: number = moves(game.board, update.board)
+        const oldBoard = JSON.parse(game.board)
+        const updateBoard = JSON.parse(update.board)
+        const totalMoves: number = moves([updateBoard] ,[oldBoard])
+        console.log(updateBoard)
+        console.log(oldBoard)
+        console.log(totalMoves)
         if (totalMoves > 1) throw new BadRequestError('Only one move allowed')
-      } else {return Game.merge(game, update).save()}
+      } else {return update.board}
 
       return Game.merge(game, update).save()
     }

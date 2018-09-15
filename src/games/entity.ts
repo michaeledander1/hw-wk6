@@ -1,5 +1,5 @@
 // src/pages/entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
 import { IsString } from 'class-validator'
 
@@ -15,11 +15,9 @@ const colorChooser = () => {
 // }
 
 
-const startingBoard = [
-	['o', 'o', 'o'],
-	['o', 'o', 'o'],
-	['o', 'o', 'o']
-]
+const startingBoard = JSON.stringify([
+    ['o', 'o', 'o'],['o', 'o', 'o'],['o', 'o', 'o']])
+
 @Entity()
 export default class Games extends BaseEntity {
 
@@ -33,19 +31,20 @@ export default class Games extends BaseEntity {
   @Column('text',) 
   color: string;
 
-  @Column('json', {default: startingBoard})
-  board: JSON;
+  @Column('json')
+  board: string;
 
   @BeforeInsert()
     setColor() {
       this.color = colorChooser();
+      this.board = startingBoard;
     }
   
-  @BeforeUpdate()
-    updateColor() {
-    //   colorValidation(this.color)
-    console.log(this.color)
-    }
+//   @BeforeUpdate()
+//     updateColor() {
+//     //   colorValidation(this.color)
+//     console.log(this.color)
+//     }
   
 
 }
