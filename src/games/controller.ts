@@ -35,8 +35,9 @@ export default class GameController {
         return Game.merge(game, update).save()
       }
       if (update.board) {
-        const oldBoard = JSON.parse(game.board)
-        const updateBoard = JSON.parse(update.board)
+        //this version at least works for updating the other properties
+        const oldBoard = [game.board]
+        const updateBoard = [update.board]
         const totalMoves: number = moves([updateBoard] ,[oldBoard])
         console.log(updateBoard)
         console.log(oldBoard)
