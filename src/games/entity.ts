@@ -1,5 +1,5 @@
 // src/pages/entity.ts
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
 import { IsString } from 'class-validator'
 
@@ -32,5 +32,10 @@ export default class Games extends BaseEntity {
 
   @Column('json', {default: startingBoard})
   board: string;
+
+  @BeforeInsert()
+    setColor() {
+        this.color = colorChooser();
+    }
 
 }
