@@ -4,7 +4,7 @@ import { BaseEntity } from 'typeorm/repository/BaseEntity'
 import { IsString } from 'class-validator'
 
 type Color = 'red' | 'blue' | 'green' | 'yellow' | 'magenta'
-type JSON = [
+const startingBoard = [
 	['o', 'o', 'o'],
 	['o', 'o', 'o'],
 	['o', 'o', 'o']
@@ -24,6 +24,6 @@ export default class Games extends BaseEntity {
   @Column('text')
   color: Color;
 
-  @Column('json')
-  board: JSON;
+  @Column('json', {default: startingBoard})
+  board: string;
 }
