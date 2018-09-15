@@ -1,6 +1,12 @@
-import { JsonController, Get, Param, Put, Body, Post, HttpCode, NotFoundError, MethodNotAllowedError } from 'routing-controllers'
+import { JsonController, Get, Param, Put, Body, Post, HttpCode, NotFoundError, MethodNotAllowedError, BadRequestError } from 'routing-controllers'
 import Game from './entity'
 import {colors} from './entity'
+
+const moves = (board1, board2): number => 
+  board1
+    .map((row, y) => row.filter((cell, x) => board2[y][x] !== cell))
+    .reduce((a, b) => a.concat(b))
+    .length
 
 @JsonController()
 export default class GameController {
@@ -24,9 +30,15 @@ export default class GameController {
       const game = await Game.findOne(id)
       if (!game) throw new NotFoundError('Cannot find game')
       if (update.color) {
-          const userColor = update.color
+        const userColor = update.color
         if (!colors.includes(userColor)) throw new MethodNotAllowedError('Invalid Color')
-      } else {return update.color}
+        return Game.merge(game, update).save()
+      }
+      if (update.board) {
+        const totalMoves: number = moves(game.board, update.board)
+        if (totalMoves > 1) throw new BadRequestError('Only one move allowed')
+      } else {return Game.merge(game, update).save()}
+
       return Game.merge(game, update).save()
     }
     @Post('/games')

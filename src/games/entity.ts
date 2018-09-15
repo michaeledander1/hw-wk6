@@ -34,7 +34,7 @@ export default class Games extends BaseEntity {
   color: string;
 
   @Column('json', {default: startingBoard})
-  board: string;
+  board: JSON;
 
   @BeforeInsert()
     setColor() {
