@@ -1,14 +1,18 @@
 // src/pages/entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate } from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
 import { IsString } from 'class-validator'
 
-const colors = ['red','blue','green','yellow', 'magenta']
+export const colors = ['red','blue','green','yellow', 'magenta']
 const colorChooser = () => {
   const randomColorIndex = Math.floor(Math.random() * colors.length); 
   const startingColor = colors[randomColorIndex];
   return startingColor
 }
+
+// const colorValidation = (color) => {
+//   if(!colors.includes(color)) console.log('Error, you can not choose this color') 
+// }
 
 
 const startingBoard = [
@@ -16,7 +20,6 @@ const startingBoard = [
 	['o', 'o', 'o'],
 	['o', 'o', 'o']
 ]
-
 @Entity()
 export default class Games extends BaseEntity {
 
@@ -27,7 +30,7 @@ export default class Games extends BaseEntity {
   @Column('text')
   name: string
 
-  @Column('text', {default: colorChooser()}) 
+  @Column('text',) 
   color: string;
 
   @Column('json', {default: startingBoard})
@@ -35,7 +38,14 @@ export default class Games extends BaseEntity {
 
   @BeforeInsert()
     setColor() {
-        this.color = colorChooser();
+      this.color = colorChooser();
     }
+  
+  @BeforeUpdate()
+    updateColor() {
+    //   colorValidation(this.color)
+    console.log(this.color)
+    }
+  
 
 }

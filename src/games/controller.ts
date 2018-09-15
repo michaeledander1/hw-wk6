@@ -1,5 +1,6 @@
-import { JsonController, Get, Param, Put, Body, Post, HttpCode, NotFoundError } from 'routing-controllers'
+import { JsonController, Get, Param, Put, Body, Post, HttpCode, NotFoundError, MethodNotAllowedError } from 'routing-controllers'
 import Game from './entity'
+import {colors} from './entity'
 
 @JsonController()
 export default class GameController {
@@ -22,7 +23,10 @@ export default class GameController {
     ) {
       const game = await Game.findOne(id)
       if (!game) throw new NotFoundError('Cannot find game')
-    
+      if (update.color) {
+          const userColor = update.color
+        if (!colors.includes(userColor)) throw new MethodNotAllowedError('Invalid Color')
+      } else {return update.color}
       return Game.merge(game, update).save()
     }
     @Post('/games')
